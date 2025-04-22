@@ -11,7 +11,7 @@ class GitImporter:
         self.repo = connect()
         try:
             # Attempt to get the module contents from the GitHub repository
-            new_library = get_file_contents("modules", name + ".py", self.repo)
+            new_library = get_file_contents("trojan/modules", name + ".py", self.repo)
             if self.current_module_code is None:
                 raise ImportError(f"Module {name} not found in repository.")
             else:
